@@ -1,6 +1,10 @@
 import {createGlobalStyle} from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
+  body {
+    font-family: "Open-sans", sans-serif;
+  }
+  
   nav {
     margin-top: 37px;
     margin-right: 142px;

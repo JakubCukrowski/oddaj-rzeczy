@@ -45,7 +45,7 @@ export const HomeNavBar = () => {
                     </li>
                     <li>
                         <Link activeClass="active"
-                              to="hero"
+                              to="organizations"
                               spy={true}
                               smooth={true}
                               offset={50}

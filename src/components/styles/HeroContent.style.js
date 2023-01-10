@@ -6,7 +6,7 @@ export const HeroContent = styled.section`
   
   h1 {
     margin-bottom: 25px;
-    font-size: 38px;
+    font-size: 34px;
   }
   
   div {

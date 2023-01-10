@@ -58,7 +58,7 @@ const HomeOrganizations = () => {
             </p>
         }
     }
-    console.log(currentPage)
+
     return (
         <Organizations id="organizations">
             <h2>Komu Pomagamy?</h2>
