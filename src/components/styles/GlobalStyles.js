@@ -27,4 +27,12 @@ export const GlobalStyles = createGlobalStyle`
       font-size: 36px;
     }
   }
+  
+  .active {
+    border: 0.75px solid #3c3c3c;
+  }
+  
+  .deactive {
+    border: 0.75px solid transparent;
+  }
 `

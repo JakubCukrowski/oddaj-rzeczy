@@ -5,7 +5,7 @@ export const HeroContainer = styled.div`
   background: transparent url(${heroImg});
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: -65%;
+  background-position: -70%;
   background-attachment: fixed;
   height: 100vh;
   display: flex;

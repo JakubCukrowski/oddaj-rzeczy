@@ -25,7 +25,7 @@ export const HomeNavBar = () => {
                     </li>
                     <li>
                         <Link activeClass="active"
-                              to="threeColumns"
+                              to="three-columns"
                               spy={true}
                               smooth={true}
                               offset={50}
@@ -35,7 +35,7 @@ export const HomeNavBar = () => {
                     </li>
                     <li>
                         <Link activeClass="active"
-                              to="contact"
+                              to="about"
                               spy={true}
                               smooth={true}
                               offset={50}
