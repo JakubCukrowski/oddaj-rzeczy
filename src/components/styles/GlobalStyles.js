@@ -1,8 +1,9 @@
 import {createGlobalStyle} from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-  body {
+  * {
     font-family: "Open-sans", sans-serif;
+    color: #3c3c3c;
   }
   
   nav {
@@ -17,6 +18,17 @@ export const GlobalStyles = createGlobalStyle`
     align-items: center;
     justify-content: flex-end;
     gap: 20px;
+    font-size: 14px;
+    color: #737373;
+
+    a {
+      padding: 9px 10px;
+      border: 0.75px solid transparent;
+
+      &:hover {
+        border: 0.75px solid #3c3c3c;
+      }
+    }
   }
   
   #three-columns {
@@ -38,5 +50,30 @@ export const GlobalStyles = createGlobalStyle`
   
   .deactive {
     border: 0.75px solid transparent;
+  }
+
+  ::placeholder {
+    color: #3C3C3C26;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .success-message {
+    color: forestgreen;
+    display: block;
+    text-align: center;
+    padding-bottom: 30px;
+  }
+  
+  .error {
+    color: tomato;
+    font-size: 12px;
+    display: block;
+  }
+  
+  .input-error {
+    border-bottom: 2px solid tomato !important;
   }
 `

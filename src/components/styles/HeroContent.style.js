@@ -6,7 +6,8 @@ export const HeroContent = styled.section`
   
   h1 {
     margin-bottom: 25px;
-    font-size: 34px;
+    font-size: 32px;
+    line-height: 40px;
   }
   
   div {
@@ -19,5 +20,8 @@ export const HeroContent = styled.section`
     padding: 26px 0;
     border: 0.75px solid #3C3C3C;
     width: 50%;
+    font-size: 32px;
+    font-weight: normal;
+    color: #3c3c3c;
   }
 `

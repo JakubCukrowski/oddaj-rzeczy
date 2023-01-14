@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Organizations} from "../styles/Organizations.style";
 import {db} from "../../Firebase.config";
 import {collection, getDocs} from "@firebase/firestore";
-import {FScontainer} from "../styles/FScontainer";
+import {FScontainerStyle} from "../styles/FScontainer.style";
 
 const HomeOrganizations = () => {
     const [organizations, setOrganizations] = useState([])
@@ -86,13 +86,13 @@ const HomeOrganizations = () => {
             {showText()}
             {slicedOrganizations.map(organization => {
                 return (
-                    <FScontainer>
+                    <FScontainerStyle>
                         <div>
                             <h3>{organization.name}</h3>
                             <p>{organization.desc}</p>
                         </div>
                         <p>{organization.items.join(", ")}</p>
-                    </FScontainer>
+                    </FScontainerStyle>
                 )
             })}
             <div className="pagination-btns">

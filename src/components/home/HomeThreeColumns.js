@@ -2,6 +2,7 @@ import React from "react";
 import {InfoContainer} from "../styles/InfoContainer.style";
 import {SimpleSteps} from "../styles/SimpleSteps.style";
 import {FourSteps} from "../styles/FourSteps.style";
+import {Link} from "react-router-dom";
 
 const HomeThreeColumns = () => {
     return (
@@ -64,7 +65,7 @@ const HomeThreeColumns = () => {
                     <p>kurier przyjedzie<br/> w dogodnym terminie</p>
                 </div>
             </FourSteps>
-            <button>ODDAJ<br/>RZECZY</button>
+            <button><Link to="/login">ODDAJ<br/>RZECZY</Link></button>
         </section>
     )
 }
