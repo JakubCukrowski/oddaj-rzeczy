@@ -10,10 +10,16 @@ export const NavbarStyle = styled.section`
 
   h2 {
     margin-bottom: 25px;
+    text-align: center;
   }
   
   img {
     margin-bottom: 60px;
+  }
+  
+  .home-btn {
+    padding: 13px 18px;
+    border: 0.75px solid #3c3c3c;
   }
   
   nav {

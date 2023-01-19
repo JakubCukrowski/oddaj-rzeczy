@@ -69,11 +69,18 @@ export const GlobalStyles = createGlobalStyle`
   
   .error {
     color: tomato;
-    font-size: 12px;
+    font-size: 12px !important;
     display: block;
   }
   
   .input-error {
     border-bottom: 2px solid tomato !important;
   }
+  
+  .error-text {
+    color: tomato;
+    padding-bottom: 8px;
+    font-size: 14px;
+  }
+  
 `

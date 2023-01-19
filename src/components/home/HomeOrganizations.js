@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Organizations} from "../styles/Organizations.style";
+import {Organizations} from "../styles/homeStyles/Organizations.style";
 import {db} from "../../Firebase.config";
 import {collection, getDocs} from "@firebase/firestore";
-import {FScontainerStyle} from "../styles/FScontainer.style";
+import {FScontainerStyle} from "../styles/homeStyles/FScontainer.style";
 
 const HomeOrganizations = () => {
     const [organizations, setOrganizations] = useState([])
@@ -18,7 +18,7 @@ const HomeOrganizations = () => {
             setOrganizations(filteredData)
         }
 
-        getOrganizations()
+        getOrganizations();
     }, [type])
 
     const lastPostIndex = currentPage * postsPerPage
@@ -84,9 +84,9 @@ const HomeOrganizations = () => {
                 </button>
             </div>
             {showText()}
-            {slicedOrganizations.map(organization => {
+            {slicedOrganizations.map((organization, index) => {
                 return (
-                    <FScontainerStyle>
+                    <FScontainerStyle key={index}>
                         <div>
                             <h3>{organization.name}</h3>
                             <p>{organization.desc}</p>

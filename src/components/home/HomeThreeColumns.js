@@ -1,7 +1,7 @@
 import React from "react";
-import {InfoContainer} from "../styles/InfoContainer.style";
-import {SimpleSteps} from "../styles/SimpleSteps.style";
-import {FourSteps} from "../styles/FourSteps.style";
+import {InfoContainer} from "../styles/homeStyles/InfoContainer.style";
+import {SimpleSteps} from "../styles/homeStyles/SimpleSteps.style";
+import {FourSteps} from "../styles/homeStyles/FourSteps.style";
 import {Link} from "react-router-dom";
 
 const HomeThreeColumns = () => {

@@ -10,8 +10,14 @@ export const LoginStyle = styled.div`
     padding: 40px 67px;
     margin-bottom: 40px;
     
-    input[type="email"] {
-      margin-bottom: 30px;
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      span {
+        margin-top: 2px;
+      }
     }
     
     input {

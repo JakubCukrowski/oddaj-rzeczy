@@ -1,7 +1,7 @@
 import React from "react";
-import {HeroContent} from "../styles/HeroContent.style";
-import {HomeNavBar} from "./HomeNavBar";
-import {HeroContainer} from "../styles/HeroContainer.style";
+import {HeroContent} from "../styles/homeStyles/HeroContent.style";
+import {Navbar} from "../Navbar/Navbar";
+import {HeroContainer} from "../styles/homeStyles/HeroContainer.style";
 import {Link} from "react-router-dom";
 
 
@@ -9,7 +9,7 @@ const HomeHero = () => {
     return (
         <section id="hero">
             <HeroContainer>
-                <HomeNavBar/>
+                <Navbar/>
                 <HeroContent>
                     <h1>Zacznij Pomagać!<br></br> Oddaj niechciane rzeczy w zaufane ręce</h1>
                     <img style={{margin: "0 auto"}} src={require('../../assets/Decoration.png')} alt="decor"/>

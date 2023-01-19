@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Contact} from "../styles/Contact.style";
+import {Contact} from "../styles/homeStyles/Contact.style";
 
 const HomeContact = () => {
     const validationAPI = "https://fer-api.coderslab.pl/v1/portfolio/contact"
@@ -24,16 +24,6 @@ const HomeContact = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        fetch(validationAPI, {
-            method: "POST",
-            body: JSON.stringify(inputs),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(err => console.log(err))
 
         if (inputs.name.length < 2 || inputs.message.length < 120 || !inputs.email.match(emailRegExp)) {
             setError(true)
@@ -43,6 +33,16 @@ const HomeContact = () => {
         if (inputs.name.length > 2 || inputs.message.length >= 120 || inputs.email.match(emailRegExp)) {
             setError(false)
             setSuccessMessage(true)
+            fetch(validationAPI, {
+                method: "POST",
+                body: JSON.stringify(inputs),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
         }
 
         setInputs({
@@ -57,7 +57,9 @@ const HomeContact = () => {
             <div className="form-container">
                 <h2>Skontaktuj się z nami</h2>
                 <img src={require('../../assets/Decoration.png')} alt="decor"/>
-                <p className={successMessage ? "success-message" : "hidden"}>Wiadomość została wysłana! <br/> Wkrótce się skontaktujemy.</p>
+                <p className={successMessage ? "success-message" : "hidden"}>
+                    Wiadomość została wysłana! <br/> Wkrótce się skontaktujemy.
+                </p>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <div>
@@ -70,8 +72,8 @@ const HomeContact = () => {
                                 placeholder="Krzysztof"
                                 onChange={handleInput}
                                 value={inputs.name}/>
-                            <span className={error && inputs.name.length < 2 ? "error" : "hidden"}>
-                                Podane imię jest nieprawidłowe!
+                            <span className="error">
+                                {error && inputs.name.length < 2 ? "Podane imię jest nieprawidłowe!" : null}
                             </span>
                         </div>
                         <div>
@@ -85,7 +87,7 @@ const HomeContact = () => {
                                 onChange={handleInput}
                                 value={inputs.email}/>
                             <span className={error && !inputs.email.match(emailRegExp)? "error" : "hidden"}>
-                                Podany email jest nieprawidłowy!
+                                {error && !inputs.email.match(emailRegExp)? "Podany email jest nieprawidłowy!" : null}
                             </span>
                         </div>
                     </div>
@@ -99,8 +101,8 @@ const HomeContact = () => {
                             onChange={handleInput}
                             placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.">
                         </textarea>
-                        <span className={error && inputs.message.length < 120 ? "error" : "hidden"}>
-                            Wiadomość musi mieć conajmniej 120 znaków!
+                        <span className="error">
+                            {error && inputs.message.length < 120 ? "Wiadomość musi mieć conajmniej 120 znaków!" : null}
                         </span>
                     </div>
                     <input type="submit" id="submitBtn" value="Wyślij"/>

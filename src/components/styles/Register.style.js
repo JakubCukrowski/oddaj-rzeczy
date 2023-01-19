@@ -9,17 +9,15 @@ export const RegisterStyle = styled.div`
     background-color: #F0F1F1;
     padding: 40px 67px;
     margin-bottom: 40px;
-
-    input[type="email"],
-    input[type="password"] {
-      margin-bottom: 30px;
+    
+    .register-form-group {
+      margin-bottom: 16px;
     }
 
     input {
       background-color: transparent;
       border: none;
       border-bottom: 0.75px solid #3c3c3c;
-      margin-top: 20px;
     }
   }
 
