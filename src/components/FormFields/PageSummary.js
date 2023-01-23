@@ -11,6 +11,9 @@ export const PageSummary = ({comments,
                                 items,
                                 whom,
                                 localization}) => {
+
+    
+                                    
     return (
         <>
             <span className="summary">Podsumowanie Twojej darowizny</span>

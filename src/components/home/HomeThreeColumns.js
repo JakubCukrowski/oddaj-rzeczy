@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {InfoContainer} from "../styles/homeStyles/InfoContainer.style";
 import {SimpleSteps} from "../styles/homeStyles/SimpleSteps.style";
 import {FourSteps} from "../styles/homeStyles/FourSteps.style";
 import {Link} from "react-router-dom";
+import { UserAuth } from "../../context/AuthContext";
 
 const HomeThreeColumns = () => {
+    const [totalBags, setTotalBags] = useState(0)
+    const [totalSupport, setTotalSupport] = useState(0)
+    const [filteredOrganizations, setFilteredOrganizations] = useState([])
+    const {organizations} = UserAuth()
+
+    useEffect(() => {
+        const showNumbers = async () => {
+            const newFilter = organizations.filter(organization => organization.type === "foundation")
+            setFilteredOrganizations(newFilter)
+            const bags = await newFilter.map(organization => organization.bags)
+            const support = await newFilter.map(organization => organization.supported)
+            setTotalBags(bags.reduce((acc, curr) => acc + curr, 0))
+            setTotalSupport(support.reduce((acc, curr) => acc + curr, 0))
+        }
+        showNumbers()
+    }, [organizations])
+
     return (
         <section id="three-columns">
             <InfoContainer>
                 <div>
                     <h2>
-                        10
+                        {totalBags}
                     </h2>
                     <p>Oddanych worków</p>
                     <span>
@@ -20,7 +38,7 @@ const HomeThreeColumns = () => {
                 </div>
                 <div>
                     <h2>
-                        5
+                        {totalSupport}
                     </h2>
                     <p>Wspartych organizacji</p>
                     <span>

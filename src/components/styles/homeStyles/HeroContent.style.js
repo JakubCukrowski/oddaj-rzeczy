@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const HeroContent = styled.section`
-  margin-right: 275px;
+  margin-right: 200px;
   text-align: center;
   
   h1 {

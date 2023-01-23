@@ -1,9 +1,12 @@
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronDown, faChevronUp} from "@fortawesome/free-solid-svg-icons";
+import {SearchBarResult} from "./SearchBarResult"
 
 export const PageThree = ({
     localization, 
+    isIncluded,
+    isSelected,
     status,
     selectStatus, 
     onClick, 
@@ -20,6 +23,7 @@ export const PageThree = ({
         <>
             <h3>Krok 3/4</h3>
             <span>Lokalizacja:</span>
+            <p className="error">{isIncluded ? `W mieście ${localization} nie istnieje fundacja pomagająca ${receivers}` : null}</p>
             <span className="error">{error === true && localization === "-wybierz-" ? "Wybierz lokalizację" : null}</span>
             <div className="dropdown-menu">
                 <div className="locations">
@@ -65,11 +69,13 @@ export const PageThree = ({
             <div className="inputs-group pageThree">
                 <label htmlFor="organizationName">Wpisz nazwę konkretnej organizacji(opcjonalnie)</label>
                 <input type="text" id="organizationName" onChange={onChange} value={searchWord} autoComplete="off"/>
-                <div className={searchWord === "" ? "hidden" : "search-result"}>
+                <div 
+                className="search-result" 
+                style={{visibility: searchWord === "" || searchWord.length > 10 || isSelected === false ? "hidden" : "visible"}}>
                     {organizations.length === 0 
                     ? "(brak wyników)" 
                     : organizations.map((organization, index) => {
-                        return <div style={{cursor: "pointer"}} key={index} onClick={searchWordSet}>{organization.name}</div>
+                        return <SearchBarResult text={organization.name} key={index} onClick={searchWordSet}></SearchBarResult>
                     })}
                 </div>
             </div>

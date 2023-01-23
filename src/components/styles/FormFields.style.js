@@ -25,6 +25,25 @@ export const FormFieldsStyle = styled.div`
     padding: 0 140px;
     position: relative;
     height: 100%;
+
+    .thank-you-container {
+      font-size: 30px;
+      text-align: center;
+      position: absolute;
+      top: 40%;
+      left: 30%
+      transform: translateX(-40%);
+
+      img {
+        margin: 0 auto;
+      }
+    }
+
+    .summary {
+      padding-top: 20px;
+      padding-bottom: 30px;
+      display: block;
+    }
     
     .flex-container {
       display: flex;
@@ -151,6 +170,11 @@ export const FormFieldsStyle = styled.div`
         overflow: hidden;
         overflow-y: auto;
         font-size: 16px;
+
+        &::-webkit-scrollbar {
+          width: 0;
+          height: 0
+        }
       }
     }
   }

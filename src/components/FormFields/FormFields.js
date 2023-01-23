@@ -5,8 +5,10 @@ import {PageTwo} from "./PageTwo";
 import {PageThree} from "./PageThree";
 import {PageFour} from "./PageFour";
 import {PageSummary} from "./PageSummary";
-import { collection, getDocs } from "@firebase/firestore";
+import { doc, getDocs, updateDoc, where, query, increment, collection, arrayUnion, getDoc } from "@firebase/firestore";
 import { db } from "../../Firebase.config";
+import { UserAuth } from "../../context/AuthContext";
+import { PageThankYou } from "./PageThankYou";
 
 export const FormFields = () => {
     const [page, setPage] = useState(0)
@@ -18,18 +20,21 @@ export const FormFields = () => {
         localization: "-wybierz-",
         receivers: "",
         aspect: "",
-        organizationName: "",
         street: "",
         city: "",
         zipCode: "",
         phoneNumber: "",
         date: "",
         time: "",
-        comments: ""
+        comments: "",
+        organizationName: ""
     })
-    const [organizations, setOrganizations] = useState([])
+    const [filteredOrganizations, setFilteredOrganizations] = useState([])
     const [searchWord, setSearchWord] = useState("")
-    const organizationsRef = collection(db, "organizations")
+    const [selectedId, setSelectedId] = useState("")
+    const {organizations, organizationsRef, setOrganizations, user} = UserAuth()
+    const [isSelected, setIsSelected] = useState(false)
+    const [isIncluded, setIsIncluded] = useState(false)
 
     const handleChange = (e) => {
         const {name, value} = e.target
@@ -71,17 +76,14 @@ export const FormFields = () => {
 
     //////////PAGE THREE
     useEffect(() => {
-        const getOrganizations = async () => {
-            const data = await getDocs(organizationsRef)
-            const foundations = data.docs.map(doc => ({...doc.data()})).filter(doc => doc.type === "foundation")
-            const filteredFoundations = foundations.filter(foundation => foundation.location.includes(details.localization))
-                .filter(foundation => foundation.target === details.aspect)
-            const newFilter = filteredFoundations.filter(foundation => foundation.name.includes(searchWord))
-            setOrganizations(newFilter)
-        }
+        const filterOrganizationsByType = organizations.filter(organization => organization.type === "foundation")
+        const newFilter = filterOrganizationsByType.filter(organization => organization.location.includes(details.localization))
+            .filter(organization => organization.target === details.aspect)
+            .filter(organization => organization.name.includes(searchWord))
 
-        getOrganizations()
-    }, [details.localization, details.aspect, searchWord])
+        setFilteredOrganizations(newFilter)
+        
+    }, [organizations, details.aspect, details.localization, searchWord])
 
     const handleFilter = async (e) => {
         if (details.receivers === "" || details.localization === "") {
@@ -100,10 +102,12 @@ export const FormFields = () => {
             }
         })
         setStatus(false)
+        setIsIncluded(false)
     }
 
     const searchWordSetting = (e) => {
         setSearchWord(e.target.textContent)
+        setIsSelected(true)
     }
 
     const selectReceivers = (e) => {
@@ -114,6 +118,8 @@ export const FormFields = () => {
                 aspect: e.target.id
             }
         })
+        setSearchWord("")
+        setIsIncluded(false)
     }
 
     const validatePageOne = () => {
@@ -134,28 +140,81 @@ export const FormFields = () => {
         }
     }
 
-    const validatePageThree = () => {
+    const validatePageThree = async () => {
         if (details.receivers === "" || details.localization === "") {
             setError(true)
 
         } else {
-            setPage(prevState => prevState + 1)
+
+            if (searchWord === "") {
+                const selectAllFoundations = query(
+                    (organizationsRef), where("type", "==", "foundation"), where("target", "==", details.aspect))
+                const snapshot = await getDocs(selectAllFoundations)
+                const docs = snapshot.docs
+                const randomIndex = Math.floor(Math.random() * docs.length)
+                setSelectedId(docs[randomIndex].id)
+                const rndOrganizationRef = doc(db, "organizations", docs[randomIndex].id)
+                const randomOrganizationDoc = await getDoc(rndOrganizationRef)
+                const randomOrganizationName = randomOrganizationDoc.data().name
+
+                if (randomOrganizationDoc.data().location.includes(details.localization)) {
+                    setDetails(prevState => {
+                        return {
+                            ...prevState,
+                            organizationName: randomOrganizationName
+                        }
+                    })
+                    setPage(prevState => prevState + 1)
+                    setError(false)
+
+                } else {
+                    setIsIncluded(true)
+                }      
+
+            } else {
+                const selectOrganization = query(collection(db, "organizations"), where("name", "==", searchWord))
+                const querySnapshot = await getDocs(selectOrganization);
+                querySnapshot.forEach((doc) => {
+                setSelectedId(doc.id)
+                });
+                setDetails(prevState => {
+                    return {
+                        ...prevState,
+                        organizationName: searchWord
+                    }
+                })
+                setPage(prevState => prevState + 1)
+                setError(false)
+            }
         }
     }
 
-    const validatePageFour = () => {
+    const validatePageFour = async () => {
         if (details.street === "" || details.city === "" || details.phoneNumber === "" || details.zipCode === ""
             || details.time === "" || details.date === "") {
             setError(true)
-
         } else {
             setPage(prevState => prevState + 1)
         }
     }
 
-    const validateSummary = (e) => {
+    const validateSummary = async (e) => {
         e.preventDefault()
 
+        const organizationToUpdate = doc(db, "organizations", selectedId)
+        const updateUserSupport = doc(db, "users", user.uid)
+        await updateDoc(organizationToUpdate, {
+        bags: increment(details.bagsCount),
+        supported: increment(1)
+    })
+        await updateDoc(updateUserSupport, {
+            support: arrayUnion(details)
+        })
+        const data = await getDocs(organizationsRef)
+        const filteredData = data.docs.map(doc => ({...doc.data()}))
+        setOrganizations(filteredData)
+        setPage(prevState => prevState + 1)
+        
     }
 
     const previousPage = (e) => {
@@ -199,8 +258,9 @@ export const FormFields = () => {
                         selectStatus={handleStatus}
                         aspect={details.aspect}
                         onChange={handleFilter}
-                        organizations={organizations}
+                        organizations={filteredOrganizations}
                         searchWord={searchWord}
+                        isIncluded={isIncluded}
                         status={status}
                         error={error}
                         searchWordSet={searchWordSetting}
@@ -233,7 +293,7 @@ export const FormFields = () => {
                     </div>
                 </>
             )
-        } else {
+        } else if (page === 4) {
             return (
                 <>
                     <PageSummary
@@ -254,6 +314,8 @@ export const FormFields = () => {
                     </div>
                 </>
             )
+        } else {
+            return <PageThankYou/>
         }
     }
 

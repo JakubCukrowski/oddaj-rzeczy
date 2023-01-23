@@ -22,7 +22,7 @@ export const Contact = styled.section`
   }
   
   .form-container {
-    padding-top: 200px;
+    padding-top: 100px;
     padding-right: 142px;
     display: flex;
     flex-direction: column;

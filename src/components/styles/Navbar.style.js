@@ -8,6 +8,7 @@ export const NavbarStyle = styled.section`
   justify-content: flex-start;
   align-items: center;
 
+
   h2 {
     margin-bottom: 25px;
     text-align: center;

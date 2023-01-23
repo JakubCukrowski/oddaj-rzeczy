@@ -53,7 +53,7 @@ export const Navbar = () => {
                     {location === "" ?
                         <>
                             <li>
-                                <ScrollLink activeClass="active"
+                                <ScrollLink activeClass="deactive"
                                             to="hero"
                                             spy={true}
                                             smooth={true}
@@ -114,7 +114,7 @@ export const Navbar = () => {
                                 <button onClick={() => goToPageAndScroll("about")}>O nas</button>
                             </li>
                             <li>
-                                <button onClick={() => goToPageAndScroll("organizations")}>Fundacja i organizacja</button>
+                                <button onClick={() => goToPageAndScroll("organizations")}>Fundacja i organizacje</button>
                             </li>
                             <li>
                                 <button onClick={() => goToPageAndScroll("contact")}>Kontakt</button>

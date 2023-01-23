@@ -1,32 +1,25 @@
 import React, {useEffect, useState} from "react";
 import {Organizations} from "../styles/homeStyles/Organizations.style";
-import {db} from "../../Firebase.config";
-import {collection, getDocs} from "@firebase/firestore";
 import {FScontainerStyle} from "../styles/homeStyles/FScontainer.style";
+import { UserAuth } from "../../context/AuthContext";
 
 const HomeOrganizations = () => {
-    const [organizations, setOrganizations] = useState([])
-    const organizationsRef = collection(db, "organizations")
+    const [filteredOrganizations, setFilteredOrganizations] = useState([])
     const [type, setType] = useState("foundation")
     const [currentPage, setCurrentPage] = useState(1)
     const [postsPerPage, setPostsPerPage] = useState(3)
+    const {organizations} = UserAuth() 
 
     useEffect(() => {
-        const getOrganizations = async () => {
-            const data = await getDocs(organizationsRef)
-            const filteredData = data.docs.map(doc => ({...doc.data()})).filter(doc => doc.type === type)
-            setOrganizations(filteredData)
-        }
-
-        getOrganizations();
-    }, [type])
+        setFilteredOrganizations(organizations.filter(organization => organization.type === type))
+    }, [type, organizations])
 
     const lastPostIndex = currentPage * postsPerPage
     const firstPostIntex = lastPostIndex - postsPerPage
-    const slicedOrganizations = organizations.slice(firstPostIntex,lastPostIndex)
+    const slicedOrganizations = filteredOrganizations.slice(firstPostIntex, lastPostIndex)
     const pages = []
 
-    for (let i = 1; i <= Math.ceil(organizations.length / postsPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(filteredOrganizations.length / postsPerPage); i++) {
         pages.push(i)
     }
 

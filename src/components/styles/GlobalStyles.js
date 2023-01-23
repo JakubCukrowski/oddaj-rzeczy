@@ -8,7 +8,7 @@ export const GlobalStyles = createGlobalStyle`
   
   nav {
     margin-top: 37px;
-    margin-right: 142px;
+    margin-right: 100px;
     margin-bottom: 190px;
   }
   
@@ -24,6 +24,7 @@ export const GlobalStyles = createGlobalStyle`
     a {
       padding: 9px 10px;
       border: 0.75px solid transparent;
+      display: inline-block;
 
       &:hover {
         border: 0.75px solid #3c3c3c;
@@ -83,4 +84,6 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 14px;
   }
   
+  
+
 `
