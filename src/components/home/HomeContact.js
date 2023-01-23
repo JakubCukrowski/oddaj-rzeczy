@@ -30,7 +30,7 @@ const HomeContact = () => {
             setSuccessMessage(false)
         }
 
-        if (inputs.name.length > 2 || inputs.message.length >= 120 || inputs.email.match(emailRegExp)) {
+        if (inputs.name.length > 2 && inputs.message.length >= 120 && inputs.email.match(emailRegExp)) {
             setError(false)
             setSuccessMessage(true)
             fetch(validationAPI, {
@@ -43,13 +43,13 @@ const HomeContact = () => {
                 .then(response => response.json())
                 .then(data => console.log(data))
                 .catch(err => console.log(err))
-        }
 
-        setInputs({
-            name: "",
-            message: "",
-            email: ""
-        })
+                setInputs({
+                    name: "",
+                    message: "",
+                    email: ""
+                })
+        }
     }
 
     return (
