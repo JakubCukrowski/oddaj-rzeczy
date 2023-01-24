@@ -9,6 +9,7 @@ import { doc, getDocs, updateDoc, where, query, increment, collection, arrayUnio
 import { db } from "../../Firebase.config";
 import { UserAuth } from "../../context/AuthContext";
 import { PageThankYou } from "./PageThankYou";
+import { async } from "@firebase/util";
 
 export const FormFields = () => {
     const [page, setPage] = useState(0)
@@ -35,6 +36,8 @@ export const FormFields = () => {
     const {organizations, organizationsRef, setOrganizations, user} = UserAuth()
     const [isSelected, setIsSelected] = useState(false)
     const [isIncluded, setIsIncluded] = useState(false)
+    const [randomOrganizationName, setRandomOrganizationName] = useState("")
+    const [randomOrganizationLocation, setRandomOrganizationLocation] = useState("")
 
     const handleChange = (e) => {
         const {name, value} = e.target
@@ -82,10 +85,24 @@ export const FormFields = () => {
             .filter(organization => organization.name.includes(searchWord))
 
         setFilteredOrganizations(newFilter)
-        
+
+        const checkUserInputs = async () => {
+            const selectAllFoundations = query(
+                (organizationsRef), where("type", "==", "foundation"), where("target", "==", details.aspect))
+            const snapshot = await getDocs(selectAllFoundations)
+            const docs = snapshot.docs
+            const randomIndex = Math.floor(Math.random() * docs.length)
+            setSelectedId(docs[randomIndex].id)
+            const rndOrganizationRef = doc(db, "organizations", docs[randomIndex].id)
+            const randomOrganizationDoc = await getDoc(rndOrganizationRef)
+            setRandomOrganizationName(randomOrganizationDoc.data().name)
+            setRandomOrganizationLocation(randomOrganizationDoc.data().location)
+        }
+
+        checkUserInputs()        
     }, [organizations, details.aspect, details.localization, searchWord])
 
-    const handleFilter = async (e) => {
+    const handleFilter = (e) => {
         if (details.receivers === "" || details.localization === "") {
             return null
 
@@ -142,56 +159,43 @@ export const FormFields = () => {
 
     const validatePageThree = async () => {
         if (details.receivers === "" || details.localization === "") {
-            setError(true)
+                setError(true)
 
-        } else {
+        } else if (searchWord === "") {
 
-            if (searchWord === "") {
-                const selectAllFoundations = query(
-                    (organizationsRef), where("type", "==", "foundation"), where("target", "==", details.aspect))
-                const snapshot = await getDocs(selectAllFoundations)
-                const docs = snapshot.docs
-                const randomIndex = Math.floor(Math.random() * docs.length)
-                setSelectedId(docs[randomIndex].id)
-                const rndOrganizationRef = doc(db, "organizations", docs[randomIndex].id)
-                const randomOrganizationDoc = await getDoc(rndOrganizationRef)
-                const randomOrganizationName = randomOrganizationDoc.data().name
-
-                if (randomOrganizationDoc.data().location.includes(details.localization)) {
-                    setDetails(prevState => {
-                        return {
-                            ...prevState,
-                            organizationName: randomOrganizationName
-                        }
-                    })
-                    setPage(prevState => prevState + 1)
-                    setError(false)
-
-                } else {
-                    setIsIncluded(true)
-                }      
-
-            } else {
-                const selectOrganization = query(collection(db, "organizations"), where("name", "==", searchWord))
-                const querySnapshot = await getDocs(selectOrganization);
-                querySnapshot.forEach((doc) => {
-                setSelectedId(doc.id)
-                });
+            if (randomOrganizationLocation.includes(details.localization)) {
                 setDetails(prevState => {
                     return {
                         ...prevState,
-                        organizationName: searchWord
+                        organizationName: randomOrganizationName
                     }
                 })
-                setPage(prevState => prevState + 1)
-                setError(false)
-            }
-        }
-    }
+                setPage(prevState => prevState + 1)   
+            } else {
+                setIsIncluded(true)
+            }   
 
-    const validatePageFour = async () => {
-        if (details.street === "" || details.city === "" || details.phoneNumber === "" || details.zipCode === ""
-            || details.time === "" || details.date === "") {
+        } else {
+            const selectOrganization = query(collection(db, "organizations"), where("name", "==", searchWord))
+            const querySnapshot = await getDocs(selectOrganization);
+            querySnapshot.forEach((doc) => {
+            setSelectedId(doc.id)
+            });
+            setDetails(prevState => {
+                return {
+                    ...prevState,
+                    organizationName: searchWord
+                }
+            })
+            setError(false)
+            setPage(prevState => prevState + 1)
+        }
+}
+          
+            
+
+    const validatePageFour = () => {
+        if (details.street === "" || details.city === "" || details.phoneNumber === "" || details.zipCode === "" || details.time === "" || details.date === "") {
             setError(true)
         } else {
             setPage(prevState => prevState + 1)
