@@ -30,7 +30,7 @@ export const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         const getOrganizations = async () => {
             const data = await getDocs(organizationsRef)
-            const filteredData = data.docs.map(doc => ({...doc.data()}))
+            const filteredData = data.docs.map(doc => ({...doc.data(), id: doc.id}))
             setOrganizations(filteredData)
         }
 

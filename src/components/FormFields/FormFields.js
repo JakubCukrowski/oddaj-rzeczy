@@ -9,7 +9,6 @@ import { doc, getDocs, updateDoc, where, query, increment, collection, arrayUnio
 import { db } from "../../Firebase.config";
 import { UserAuth } from "../../context/AuthContext";
 import { PageThankYou } from "./PageThankYou";
-import { async } from "@firebase/util";
 
 export const FormFields = () => {
     const [page, setPage] = useState(0)
@@ -36,8 +35,6 @@ export const FormFields = () => {
     const {organizations, organizationsRef, setOrganizations, user} = UserAuth()
     const [isSelected, setIsSelected] = useState(false)
     const [isIncluded, setIsIncluded] = useState(false)
-    const [randomOrganizationName, setRandomOrganizationName] = useState("")
-    const [randomOrganizationLocation, setRandomOrganizationLocation] = useState("")
 
     const handleChange = (e) => {
         const {name, value} = e.target
@@ -83,23 +80,7 @@ export const FormFields = () => {
         const newFilter = filterOrganizationsByType.filter(organization => organization.location.includes(details.localization))
             .filter(organization => organization.target === details.aspect)
             .filter(organization => organization.name.includes(searchWord))
-
         setFilteredOrganizations(newFilter)
-
-        const checkUserInputs = async () => {
-            const selectAllFoundations = query(
-                (organizationsRef), where("type", "==", "foundation"), where("target", "==", details.aspect))
-            const snapshot = await getDocs(selectAllFoundations)
-            const docs = snapshot.docs
-            const randomIndex = Math.floor(Math.random() * docs.length)
-            setSelectedId(docs[randomIndex].id)
-            const rndOrganizationRef = doc(db, "organizations", docs[randomIndex].id)
-            const randomOrganizationDoc = await getDoc(rndOrganizationRef)
-            setRandomOrganizationName(randomOrganizationDoc.data().name)
-            setRandomOrganizationLocation(randomOrganizationDoc.data().location)
-        }
-
-        checkUserInputs()        
     }, [organizations, details.aspect, details.localization, searchWord])
 
     const handleFilter = (e) => {
@@ -157,30 +138,32 @@ export const FormFields = () => {
         }
     }
 
-    const validatePageThree = async () => {
+    const validatePageThree = () => {
+        const filterByTarget = filteredOrganizations.filter(organization => organization.target === details.aspect)
+        const randomIndex = Math.floor(Math.random() * filterByTarget.length)
+        const randomOrganization = filterByTarget[randomIndex]
+
         if (details.receivers === "" || details.localization === "") {
                 setError(true)
 
         } else if (searchWord === "") {
-
-            if (randomOrganizationLocation.includes(details.localization)) {
+        
+            if (randomOrganization && randomOrganization.location.includes(details.localization) && details.aspect !== "") {
                 setDetails(prevState => {
                     return {
                         ...prevState,
-                        organizationName: randomOrganizationName
+                        organizationName: randomOrganization.name
                     }
                 })
-                setPage(prevState => prevState + 1)   
+                setPage(prevState => prevState + 1) 
+                setSelectedId(randomOrganization.id)
             } else {
                 setIsIncluded(true)
-            }   
+            }     
 
         } else {
-            const selectOrganization = query(collection(db, "organizations"), where("name", "==", searchWord))
-            const querySnapshot = await getDocs(selectOrganization);
-            querySnapshot.forEach((doc) => {
-            setSelectedId(doc.id)
-            });
+            const filterByName = filteredOrganizations.filter(organization => organization.name === searchWord)
+            filterByName.forEach(organization => setSelectedId(organization.id))
             setDetails(prevState => {
                 return {
                     ...prevState,
@@ -215,9 +198,25 @@ export const FormFields = () => {
             support: arrayUnion(details)
         })
         const data = await getDocs(organizationsRef)
-        const filteredData = data.docs.map(doc => ({...doc.data()}))
+        const filteredData = data.docs.map(doc => ({...doc.data(), id: doc.id}))
         setOrganizations(filteredData)
         setPage(prevState => prevState + 1)
+        setDetails({
+            items: "",
+            bagsCount: "-wybierz-",
+            localization: "-wybierz-",
+            receivers: "",
+            aspect: "",
+            street: "",
+            city: "",
+            zipCode: "",
+            phoneNumber: "",
+            date: "",
+            time: "",
+            comments: "",
+            organizationName: ""
+        })
+        setSelectedId("")
         
     }
 
